@@ -1,0 +1,59 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<style>
+    #timer {
+        opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    }
+  </style>
+<div style="text-align: center;" id="togglebutton" class="container">
+    <h2>Workout Timer</h2>
+    <div id="timer" class="well">00:00</div>
+    <button id="finish" class="btn btn-danger" onclick="stopTimer()">Finish Workout</button>
+  </div>
+  <script>
+  let seconds = parseInt(sessionStorage.getItem("seconds")) || 0;
+  let minutes = parseInt(sessionStorage.getItem("minutes")) || 0;
+  let timer;
+  
+  function startTimer() {
+    timer = setInterval(function() {
+      seconds++;
+      if (seconds == 60) {
+        seconds = 0;
+        minutes++;
+      }
+      let displaySeconds = seconds < 10 ? "0" + seconds : seconds;
+      let displayMinutes = minutes < 10 ? "0" + minutes : minutes;
+      document.getElementById("timer").innerHTML = displayMinutes + ":" + displaySeconds;
+      sessionStorage.setItem("minutes", minutes);
+      sessionStorage.setItem("seconds", seconds);
+    
+    document.getElementById("timer").style.opacity = 1;
+    }, 1000);
+  }
+
+  function stopTimer() {
+    clearInterval(timer);
+    sessionStorage.setItem("minutes", 0);
+    sessionStorage.setItem("seconds", 0);
+    startTimer;
+  }
+  
+  // Start the timer when the page is loaded
+  window.onload = startTimer;
+  </script>
+      <div style="text-align: center;">
+
+        {% if exercises.has_previous %}
+            <a href="?page={{ exercises.previous_page_number }}"><button onclick="savetime()" class="btn btn-secondary">Previous</button></a>
+        {% endif %}
+    
+        <h6>Page: {{ exercises.number }}</h6>
+        {% if exercises.has_next %}
+            <a href="?page={{ exercises.next_page_number }}"><button class="btn btn-info">Next Exercise</button></a>
+        {% endif %}
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    
+<style>
+  .descbutton {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition-duration: 0.4s;
+  }
+
+  .descbutton:hover {
+    background-color: #3e8e41; /* Darker green */
+    color: white;
+  }
+
+#timer {
+ 
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    
+  font-size: 36px;
+  padding-left: 100%;
+}
+</style>
+
+<div style="text-align: center;" id="togglebutton" class="container">
+  <h2>Workout Timer</h2>
+  <div id="timer" class="well">00:00</div>
+  
+</div>
+{% for workout in exercises %}
+
+<div style="text-align: center;" id="togglebutton">
+  <h3>{{ workout.name }}</h3>
+  
+    <img src="{{workout.gifUrl}}" height="200px" width="200px">
+    <br>
+  <button class="descbutton" onclick="toggleTextArea()">Show Workout Description</button>
+  <h6 id="myTextArea" style="display: none;">{{ workout.description }}</h6>
+</div>
+{% endfor %}
+
+
+
+<br>
+<div style="text-align: center;">
+  
+  {% if exercises.has_previous %}
+  <a href="?page={{ exercises.previous_page_number }}"><button onclick="savetime()" class="btn btn-secondary">Previous</button></a>
+  {% endif %}
+  
+  <h6>Page: {{ exercises.number }}</h6>
+  {% if exercises.has_next %}
+  <a href="?page={{ exercises.next_page_number }}"><button class="btn btn-info">Next Exercise</button></a>
+  {% endif %}
+  <br>
+  <br>
+  <form action="{% url 'workout_saver' %}" method="post">
+    {% csrf_token %}
+    <input name="timed" hidden type="text">
+  <button id="finish" class="btn btn-danger" type="submit" onclick="stopTimer()">Finish Workout</button></form>
+</div>
+<script>
+  function toggleTextArea() {
+    var button = document.querySelector('.descbutton');
+    if (button.innerHTML == "Show Workout Description") {
+      button.innerHTML = "Hide Workout Description";
+    }
+    else {
+      button.innerHTML = "Show Workout Description";
+
+    }
+    var textArea = document.getElementById("myTextArea");
+    if (textArea.style.display === "none") {
+      textArea.style.display = "block";
+    } else {
+      textArea.style.display = "none";
+    }
+  }
+  </script>
+  
+<script>
+  let seconds = parseInt(sessionStorage.getItem("seconds")) || 0;
+  let minutes = parseInt(sessionStorage.getItem("minutes")) || 0;
+  let timer;
+  
+  function startTimer() {
+    timer = setInterval(function() {
+      seconds++;
+      if (seconds == 60) {
+        seconds = 0;
+        minutes++;
+      }
+      let displaySeconds = seconds < 10 ? "0" + seconds : seconds;
+      let displayMinutes = minutes < 10 ? "0" + minutes : minutes;
+      document.getElementById("timer").innerHTML = displayMinutes + ":" + displaySeconds;
+      sessionStorage.setItem("minutes", minutes);
+      sessionStorage.setItem("seconds", seconds);
+    
+    document.getElementById("timer").style.opacity = 1;
+    }, 1000);
+  }
+
+  function stopTimer() {
+    clearInterval(timer);
+    sessionStorage.setItem("minutes", 0);
+    sessionStorage.setItem("seconds", 0);
+    startTimer;
+  }
+  
+  // Start the timer when the page is loaded
+  window.onload = startTimer;
+  </script>
+{% endblock %}

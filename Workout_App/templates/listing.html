@@ -1,0 +1,63 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+        <div>
+                <h2>{{ list.item }}</h2>
+                <h4>Price: ${{ list.price }}</h4>
+                <h5>{{ list.description }}</h5>
+                <h6>{{ list.date }}</h6>
+                <img src="{{ list.image }}" width="128" height="128">
+        </div>
+        <br>
+        {% if not owner %}
+        <form action="{% url 'listing' list.item list.id %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-primary" type="submit">{{ tag }}</button>
+                
+        </form>
+
+        <br>
+        {% endif %}
+        {% if not closed and not owner %}
+                <h3>{{ length }} Bids so far.</h3>
+                <h5>Latest bids:</h5>
+                {% for bid in bids %}
+                        {{bid.bid}}
+                {% endfor %}
+                
+        
+        
+        <form action="{% url 'bid' list.item list.id %}" method="post">
+                {{ form }}
+                {% csrf_token %}
+                <br>
+                <button class="btn btn-secondary" type="submit">Place bid</button>
+        </form>
+        {% endif %}
+
+        {% if valid %}
+                <a href="{% url 'close' list.item list.id %}" ><button type="submit" m>Close</button></a>
+        {% endif %}   
+        {% if closed %}
+        <h3>Auction Closed</h3>
+        <h3>{{ c_us }} Won the Auction</h3>
+        {% endif %}
+        {% if not owner %}
+        <br>
+        <form action="{% url 'comment' list.item list.id %}" method="post">
+                
+                {{ commentform }}
+                {% csrf_token %}
+                <br>
+                <button class="btn btn-warning" type="submit">Add Comment</button>
+        </form>
+        {% endif %}
+        <br>
+        <h4>Comments:</h4>
+        {% for comment in comments %}
+                <div class="container-fluid">
+                        <h6>&#128100 {{ comment.user_name }}</h6>
+                        <p>{{ comment.comment }}</p>
+                </div>
+        {% endfor %}
+{% endblock %}

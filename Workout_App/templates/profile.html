@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <style>
+        button {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: .25rem;
+            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+        button:hover {
+        background-color: #4CAF50; /* Green */
+        color: white;
+        }
+
+        .left {
+            
+            float: left;
+            clear: left;
+        }
+        
+        .right {
+            float: right;
+            width: 300px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+
+
+
+        
+    </style>
+
+
+        <div class="left">
+            <h1>User Profile</h1>
+            <h2>Personal Information</h2>
+            <p>Name: {{user.username}}</p>
+            <p style="display: inline-block;">Age: </p><p style="display: inline-block;" class="age"> {{user.age}}  </p> <button class="buttons" data-button="age" data-user="{{ user.username}}" data-profile="{{ user.age }}" style="border-radius: 20px; padding: 5px 10px; margin-left: 10px;" >Edit</button>
+            <br>
+            <p style="display: inline-block;">Height: </p><p style="display: inline-block;" class="height"> {{ user.height }}  </p> <button class="buttons" data-user="{{ user.username}}" data-profile="{{ user.height }}"  data-button="height" style="border-radius: 20px; padding: 5px 10px; margin-left: 10px;" >Edit</button> 
+            <br>
+            <p style="display: inline-block;" >Weight: </p><p style="display: inline-block ;" class="weight"> {{ user.weight }}  </p><button class="buttons" data-user="{{ user.username}}" data-profile="{{ user.weight }}" data-button="weight" style="border-radius: 20px; padding: 5px 10px; margin-left: 10px;" >Edit</button>
+        </div> 
+
+    <div class="right" style="float: right;">
+        <h2>Health Statistics</h2>
+        <p>BMI: <span id="BMI">{{fitness.BMI}}</span></p>
+        <p>BMR: <span id="BMR">{{fitness.BMR}}</span></p>
+        <p>Calories needed: <span id="Calories"></span>{{fitness.Calories}}</p>
+    </div>
+    <div class="left">
+    <h2>Workout Statistics</h2>
+    <p>Workouts Completed: <span id="workoutsCompleted"></span>{{user.workout_number}}</p>
+    <p>Total Time Exercised: <span id="totalTimeExercised"></span>{{user.total_workout_time}}</p>
+    </div>
+
+<script>
+    
+    // Edit Age, Weight or Height
+    document.querySelectorAll('.buttons').forEach(button  => {
+        let save_button = document.createElement("button");
+        save_button.classList.add('btn', 'btn-dark');
+        button.onclick = function() {
+            button.style.display = 'none';
+            var profile = button.dataset.profile;
+            var user = button.dataset.user;
+                    var button_type = button.dataset.button;
+                    console.log(button_type);
+                
+
+                let div = document.createElement("div");
+                let text = document.createElement("input");
+                text.type = "number";
+                text.classList.add('new_text');
+                let heading = document.querySelector(`.${button_type}`);
+                div.appendChild(text);
+                div.appendChild(document.createElement("br"));
+                div.appendChild(save_button);
+                save_button.innerHTML = "save";
+                
+                text.value = parseInt(heading.innerHTML) ;
+                heading.replaceWith(div);
+                save_button.addEventListener('click', () => {
+                
+                heading.innerHTML = document.querySelector('.new_text').value;
+                console.log(heading.innerHTML)
+                div.replaceWith(heading);
+
+                 fetch(`/edit/${button_type}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        new_edit: heading.innerHTML
+                    })
+                    });
+                    console.log("done");
+                button.style.display = 'inline-block';
+
+                location.reload(true);
+
+            });
+            }
+
+            
+        });
+
+</script>
+    
+
+{% endblock %}

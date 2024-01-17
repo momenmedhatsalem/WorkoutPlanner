@@ -1,0 +1,261 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+
+ <style>
+
+    </style>
+
+<h2>Select Workout Type</h2>
+
+ <div class="tab" id="tab">
+   <button class="tablinks" onclick="openWorkout(event, 'Cardio')">Cardio</button>
+   <button class="tablinks" onclick="openWorkout(event, 'Strength')">Strength</button>
+   <button class="tablinks" onclick="openWorkout(event, 'Flexibility')">Flexibility</button>
+   <button class="tablinks" onclick="openWorkout(event, 'MyPlan')">My Plan</button>
+ </div>
+ <div id="MyPlan" class="tabcontent">
+  <h3>My Plan</h3>
+  <p>Cardio workouts...</p>
+</div>
+ <div id="Cardio" class="tabcontent">
+   <h3>Cardio</h3>
+   <p>Cardio workouts...</p>
+ </div>
+ 
+ <div id="Strength" class="tabcontent">
+   <h3>Strength</h3>
+   <p>Strength workouts...</p>
+   <style>
+   </style>
+
+   
+   <h2>Strength Workouts</h2>
+   <style>
+   input[type=range] {
+     
+     width: 200px;
+     margin: 10px 0;
+   }
+   
+   input[type=range]:focus {
+     outline: none;
+   }
+   
+   input[type=range]::-webkit-slider-runnable-track {
+     width: 100%;
+     height: 8.4px;
+     cursor: pointer;
+     transition: background-color 0.2s;
+     box-shadow: 1px 1px 1px #000000;
+     background: #3071A9;
+     border-radius: 1.3px;
+   }
+   
+   input[type=range]:focus::-webkit-slider-runnable-track {
+     background: #367EBD;
+   }
+   
+   input[type=range]::-moz-range-track {
+       width: 100%;
+       height: 8.4px;
+       cursor: pointer;
+       box-shadow: 1px 1px 1px #000000;
+       background: #3071A9;
+       border-radius: 1.3px;
+   }
+   
+   input[type=range]:focus::-moz-range-track {
+       background: #367EBD;
+   }
+   
+   input[type=range]::-ms-track {
+       width: 100%;
+       height: 8.4px;
+       cursor: pointer;
+       background: transparent;
+       border-color: transparent;
+       color: transparent;
+   }
+   
+   input[type=range]::-ms-fill-lower {
+       background: #3071A9;
+       border-radius: 1.3px;
+   }
+   
+   input[type=range]:focus::-ms-fill-lower {
+       background: #367EBD;
+   }
+   
+   input[type=range]::-ms-fill-upper {
+       background: #3071A9;
+       border-radius: 1.3px;
+   }
+   
+   input[type=range]:focus::-ms-fill-upper {
+       background: #367EBD;
+   }
+   
+   input[type=range]::-webkit-slider-thumb {
+       box-shadow: 1px 1px 1px #000000;
+       border: 1px solid #000000;
+       height: 36px;
+       width: 16px;
+       border-radius: 3px;
+       background:#FFFFFF ;
+       cursor:pointer ;
+       -webkit-appearance:none ;
+   }
+   
+   input[type=range]::-moz-range-thumb {
+       box-shadow:1 px1 px1 px#000000 ;
+       border :1 pxsolid#000000 ;
+       height :36 px ;
+       width :16 px ;
+       border-radius :3 px ;
+       background:#FFFFFF ;
+       cursor:pointer ;
+   }
+   
+   input[type=range]::-ms-thumb {
+      box-shadow :1 px1 px1 px#000000 ;
+      border :1 pxsolid#000000 ;
+      height :36 px ;
+      width :16 px ;
+      border-radius :3 px ;
+      background:#FFFFFF ;
+      cursor:pointer ;
+   }
+   </style>
+   
+   <h2>Select Workout Difficulty</h2>
+
+   <form method="post" action="{% url 'start_workout' %}">
+    {% csrf_token %}
+    <input name="difficulty_range" type="range" min="1" max="3" value="1" id="difficulty-range">
+    <input type="text" name="chosenWorkout" id="chosenWorkout" hidden>
+   
+   
+   <div id="easy" class="difficulty-content">
+       <h3>Easy Difficulty</h3>
+       <p>Can do less than 10 pushups.</p>
+   </div>
+   
+   <div id="medium" class="difficulty-content" style="display:none;">
+       <h3>Medium Difficulty</h3>
+       <p>Can do between 10 and 20 pushups.</p>
+   </div>
+   
+   <div id="hard" class="difficulty-content" style="display:none;">
+       <h3>Hard Difficulty</h3>
+       <p>Can do more than 20 pushups.</p>
+   </div>
+   
+   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector("#startbutton").style.display = "none";
+
+      document.querySelector("#tab").addEventListener("click", function() {
+        document.querySelector("#startbutton").style.display = "block";
+      })
+    })
+   document.getElementById("difficulty-range").addEventListener("change", function() {
+       var difficultyContent = document.getElementsByClassName("difficulty-content");
+       for (var i = 0; i < difficultyContent.length; i++) {
+           difficultyContent[i].style.display = "none";
+       }
+       
+       var selectedDifficulty = this.value;
+       if (selectedDifficulty == "1") {
+           document.getElementById("easy").style.display = "block";
+       } else if (selectedDifficulty == "2") {
+           document.getElementById("medium").style.display = "block";
+       } else if (selectedDifficulty == "3") {
+           document.getElementById("hard").style.display = "block";
+       }
+   });
+   </script>
+   <div class="box" onclick="WorkoutType(event, 'full-body')">Full Body</div>
+   <div class="box" onclick="WorkoutType(event, 'upper-body')">Upper Body</div>
+   <div class="box" onclick="WorkoutType(event, 'lower-body')">Lower Body</div>
+   
+   <div id="full-body" class="workout-content">
+     <h3>Full Body Workouts</h3>
+     <ul>
+       <li>Deadlifts</li>
+       <li>Squats</li>
+       <li>Bench Press</li>
+     </ul>
+   </div>
+   <img src="http://d205bpvrqc9yn1.cloudfront.net/1604.gif" height="200px" width="200px"/>
+   <div id="upper-body" class="workout-content">
+     <h3>Upper Body Workouts</h3>
+     <ul><!--
+        {% for workout in mainexercises%}
+        
+        {% if workout in mainexercises %}
+        
+            <li>{{workout.name}}</li>-->
+            <!--
+            {% endif %}
+        {% endfor %}-->
+    </ul>
+   </div>
+   
+   <div id="lower-body" class="workout-content">
+     <h3>Lower Body Workouts</h3>
+     <ul>
+       <li>Lunges</li>
+       <li>Step-ups</li>
+       <li>Calf Raises</li>
+     </ul>
+   </div>
+   
+   <script>
+   function WorkoutType(evt, workoutName) {
+       var i, workoutContent, boxes;
+      document.querySelector("#chosenWorkout").value = workoutName;
+       workoutContent = document.getElementsByClassName("workout-content");
+       for (i = 0; i < workoutContent.length; i++) {
+           workoutContent[i].style.display = "none";
+       }
+   
+       boxes = document.getElementsByClassName("box");
+       for (i = 0; i < boxes.length; i++) {
+           boxes[i].className = boxes[i].className.replace(" active", "");
+       }
+   
+       document.getElementById(workoutName).style.display = "block";
+       evt.currentTarget.className += " active";
+   }
+   document.getElementsByClassName("box")[0].click();
+   </script>
+   
+ </div>
+ 
+ <div id="Flexibility" class="tabcontent">
+   <h3>Flexibility</h3>
+   <p>Flexibility workouts...</p>
+ </div>
+ <button id="startbutton" class="btn btn-primary" type="submit">Start Workout</button>
+</form>
+ <script>
+ function openWorkout(evt, workoutName) {
+     var i, tabcontent, tablinks;
+ 
+     tabcontent = document.getElementsByClassName("tabcontent");
+     for (i = 0; i < tabcontent.length; i++) {
+         tabcontent[i].style.display = "none";
+     }
+ 
+     tablinks = document.getElementsByClassName("tablinks");
+     for (i = 0; i < tablinks.length; i++) {
+         tablinks[i].className = tablinks[i].className.replace(" active", "");
+     }
+ 
+     document.getElementById(workoutName).style.display = "block";
+     evt.currentTarget.className += " active";
+ }
+ </script>
+{% endblock %}

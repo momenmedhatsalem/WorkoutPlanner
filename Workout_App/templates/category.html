@@ -1,0 +1,18 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Categories</h2>
+    <ul class="list-group">
+    {% for choice in choices %}
+    <li class="list-group-item">
+        <form action="{% url 'categorysets' choice %}">
+           
+            <a class="hello" name="chsen" href="" onclick="this.closest('form').submit();return false;">
+                <h6 value="{{ choice }} name=chosen">{{ choice }}</h6>
+
+            </a>
+        </form>
+    </li>
+    {% endfor %}
+    </ul>
+{% endblock %}
